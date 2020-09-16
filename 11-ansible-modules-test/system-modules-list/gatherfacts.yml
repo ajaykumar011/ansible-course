@@ -1,0 +1,17 @@
+---
+  -
+    hosts: ubuntu1
+    gather_facts: false
+      
+    tasks:
+      # Example that prints return information from the previous task
+      - name: Gathering filtered facts only
+        setup: 
+          filter: ansible_*
+          
+
+...
+#  To run use this command -  ansible-playbook -v python-check.yml
+# gather_subset: if supplied, restrict the additional facts collected to the given subset. Possible values: all, min, hardware, network, virtual, ohai, and facter Can specify a list of values to specify a larger subset. Values can also be used with an initial ! to specify that that specific subset should not be collected. 
+#For instance: !hardware, !network, !virtual, !ohai, !facter. 
+#If !all is specified then only the min subset is collected. To avoid collecting even the min subset, specify !all and !min subsets. To collect only specific facts, use !all, !min, and specify the particular fact subsets. Use the filter parameter if you do not want to display some collected facts.

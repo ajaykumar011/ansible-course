@@ -1,0 +1,29 @@
+---
+  # YAML documents begin with the document separator ---
+   
+  # The minus in YAML this indicates a list item.  The playbook contains a list
+  # of plays, with each play being a dictionary
+-
+  # Target: where our play will run and options it will run with
+  hosts: ubuntu
+ 
+  tasks:
+    - name: create some test users
+      user:
+        name: "{{ item }}"
+        state: present
+        groups: "sudo"
+      with_sequence: start=0 end=10 format=testuser%02x
+    
+    - name: create a series of directories with even numbers for some reason
+      file:
+        dest: "/var/stuff/{{ item }}"
+        state: directory
+      with_sequence: start=4 end=16 stride=2
+    
+    - name: a simpler way to use the sequence plugin create 4 groups
+      group:
+        name: "group{{ item }}"
+        state: present
+      with_sequence: count=4
+...

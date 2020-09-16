@@ -1,0 +1,13 @@
+- hosts:
+    - localhost
+  vars:
+    log: []
+    list: [1,2,3,4]
+  tasks:
+    - name: Include role5
+      include_role: name=role5
+      loop: "{{ list }}"
+      loop_control:
+        loop_var: struct
+    - debug:
+        msg: "{{ log }}"

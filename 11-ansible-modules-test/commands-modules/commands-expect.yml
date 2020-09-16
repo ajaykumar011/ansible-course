@@ -1,0 +1,29 @@
+---
+    -
+      hosts: centos1
+      gather_facts: true
+      
+      tasks:
+        - name: Case insensitive password string match
+          expect:
+            command: passwd sanjay
+            responses:
+              (?i)password: "MySekretPa$$word"
+        # you don't want to show passwords in your logs
+          no_log: false
+
+   #pip install pexpect  to use expect module  
+   #yum install pexpect on remote machine will execute this. 
+ 
+
+
+
+
+
+
+
+
+
+
+...
+#  To run use this command -  ansible-playbook -v python-check.yml

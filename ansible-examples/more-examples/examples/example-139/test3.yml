@@ -1,0 +1,13 @@
+- hosts: localhost
+  gather_facts: no
+  vars:
+    list:
+      - 'AAA'
+      - 'BBB'
+    item: 0
+      
+  tasks:
+    - debug:
+        msg: "{{ list[item] }}"
+    - debug:
+        msg: "{{ list[{{ item }}] }}"

@@ -1,0 +1,29 @@
+---
+# YAML documents begin with the document separator ---
+ 
+# Manage user accounts and user attributes. In this example we are creating users
+# create_home: yes (default), group:<string> (self is default), shell: <string>
+# state : present (this is default but in user delete we may need to declare this)
+-
+ 
+  # Target: where our play will run and options it will run with
+  hosts: linux
+ 
+  # Task: the list of tasks that will be executed within the playbook
+  tasks:
+    - name: Deleting user
+      user:
+        name: "{{ item }}"
+        state: absent
+        remove: yes  #delete home directory as well.
+      with_items: 
+        - james
+        - hayley
+        - lily
+        - anwen
+ 
+# Three dots indicate the end of a YAML document
+...
+
+#ansible all -m command -a 'tail -4 /etc/passwd'
+#ssh root@centos1 'ls /home'

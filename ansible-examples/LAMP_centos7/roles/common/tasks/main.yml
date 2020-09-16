@@ -1,0 +1,56 @@
+---
+  - name: upgrade all packages
+    yum:
+      name: '*'
+      state: latest
+  - name: install the 'Development tools' package group
+    yum:
+      name: "@Development tools"
+      state: present
+  
+  # Enabling Repo EPEL and REMI for installation of PHP.
+  - name: Install EPEL repo.
+    yum:
+      name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm
+      state: present
+  
+  - name: Import EPEL GPG key.
+    rpm_key:
+      key: /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}
+      state: present
+  
+  - name: Install remi repo.
+    yum:
+      name: http://rpms.famillecollet.com/enterprise/remi-release-{{ ansible_distribution_major_version }}.rpm
+      state: present
+  
+  - name: Import remi GPG key.
+    rpm_key:
+      key: http://rpms.remirepo.net/RPM-GPG-KEY-remi
+      state: present
+        
+  - name: Checking the remi-safe 
+    command: yum --disablerepo="*" --enablerepo="remi-safe" list php[7-9][0-9].x86_64
+    register: result
+  - debug:
+      var: result
+  #this list all the packages
+  # - name: get the rpm package facts
+  #   package_facts:
+  #     manager: rpm
+  # - name: show them
+  #   debug: var=ansible_facts.packages
+
+
+  - name: Gather the rpm package facts
+    package_facts:
+      manager: auto
+  - name: Check whether a package called foobar is installed
+    debug:
+      msg: "{{ ansible_facts.packages['remi-release'] | length }} versions of remi-release are installed!"
+    when: "'remi-release' in ansible_facts.packages"
+
+ 
+  
+
+  

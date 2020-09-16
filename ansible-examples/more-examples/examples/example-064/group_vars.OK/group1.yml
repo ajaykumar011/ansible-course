@@ -1,0 +1,8 @@
+# script_dir: /tmp
+filewatches: "{{ filewatches_var|from_yaml }}"
+filewatches_var: |
+    {% for host in groups['worker'] %}
+    - type: "copy"
+      directory_name: "{{ host }}"
+      shell_script: "{{ script_dir }}/ascript.sh"
+    {% endfor %}

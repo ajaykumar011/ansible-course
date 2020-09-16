@@ -1,0 +1,33 @@
+---
+    -
+      hosts: centos1
+      gather_facts: true
+      
+      tasks:
+        - name: Transfer the script
+          copy: src=script.sh dest=/root/script.sh mode=0775
+
+        - name: Change the working directory to somedir/ before executing the command.
+          shell: sh script.sh > scriptout.txt  #>> or << or $ does not work with command
+          args:
+            chdir: /root/
+
+        # You can also use the 'cmd' parameter instead of free form format.
+        - name: This command will change the working directory to var/log/.
+          shell:
+            cmd: ls -l | grep log  # Pipe does not work with command hence we use shell
+            chdir: /var/log/
+     
+ 
+
+
+
+
+
+
+
+
+
+
+...
+#  To run use this command -  ansible-playbook -v python-check.yml

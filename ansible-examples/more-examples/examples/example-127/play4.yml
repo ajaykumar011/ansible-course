@@ -1,0 +1,23 @@
+- hosts: localhost
+  tasks:
+    - stat:
+        path: /scratch/tmp
+      register: info
+    - debug:
+        var: info
+    - debug:
+        var: info.stat.exists
+
+    - stat:
+        path: /scratch/tmp2
+      register: info2
+    - debug:
+        var: info2
+    - debug:
+        var: info2.stat.exists
+
+#      patterns:
+#        - "INST*"
+
+# Find Remote File Using Wildcard In Ansible
+# https://stackoverflow.com/questions/57175792/find-remote-file-using-wildcard-in-ansible/

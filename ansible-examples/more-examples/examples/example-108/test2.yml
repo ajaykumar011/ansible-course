@@ -1,0 +1,65 @@
+- hosts: localhost
+  gather_facts: false
+  vars:
+#    ips_per_group:
+#      - ["masters", "192.168.13.236", ["cluster"]]
+#      - ["nodes"  , "192.168.13.201", ["cluster"]]
+#      - ["nodes"  , "192.168.13.237", ["cluster"]]
+    ips_per_group:
+      '192.168.13.236':
+        my_groups:
+          - 'masters'
+        my_children: 'cluster'
+      '192.168.13.201':
+        my_groups:
+          - 'nodes'
+        my_children: 'cluster'
+      '192.168.13.237':
+        my_groups:
+          - 'nodes'
+        my_children: 'cluster'
+
+  tasks:
+    - name: add host dynamically
+      add_host:
+        name: "{{ item.key }}"
+        groups: "{{ item.value.my_groups }}" 
+        fact_children: "{{ item.value.my_children }}"
+      loop: "{{ ips_per_group|dict2items }}"
+
+    - debug:
+        var: groups.masters
+    - debug:
+        var: groups.nodes
+
+- hosts: masters
+  gather_facts: false
+  tasks:
+    - debug:
+        var: fact_children
+
+    - name: add hosts to children groups
+      group_by:
+        key: "{{ fact_children }}"
+
+    - debug:
+        var: groups
+
+- hosts: nodes
+  gather_facts: false
+  tasks:
+    - debug:
+        var: fact_children
+
+    - name: add hosts to children groups
+      group_by:
+        key: "{{ fact_children }}"
+
+    - debug:
+        var: groups
+
+- hosts: cluster
+  gather_facts: false
+  tasks:
+    - debug:
+        var: fact_children

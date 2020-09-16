@@ -1,0 +1,5 @@
+---
+  - name: Installing web server on Redhat or Centos family
+    yum:
+        name: httpd
+        state: present

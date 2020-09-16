@@ -1,0 +1,37 @@
+---
+  -
+   hosts: centos1
+   gather_facts: true
+
+   tasks:
+    - name: Synchronization of src on the control machine to dest on the remote hosts
+      synchronize:
+        src: ./html
+        dest: /var/www/ #this must be present html folder will be created on remote to sync
+  
+    # - name: Synchronization using rsync protocol (push)
+    #   synchronize:
+    #     src: some/relative/path/
+    #     dest: rsync://somehost.com/path/
+    
+    # - name: Synchronization using rsync protocol (pull)
+    #   synchronize:
+    #     mode: pull
+    #     src: rsync://somehost.com/path/
+    #     dest: /some/absolute/path/
+    
+    # - name:  Synchronization using rsync protocol on delegate host (push)
+    #   synchronize:
+    #     src: /some/absolute/path/
+    #     dest: rsync://somehost.com/path/
+    #   delegate_to: delegate.host
+    
+    # - name: Synchronization using rsync protocol on delegate host (pull)
+    #   synchronize:
+    #     mode: pull
+    #     src: rsync://somehost.com/path/
+    #     dest: /some/absolute/path/
+    #   delegate_to: delegate.host
+
+...
+#  To run use this command -  ansible-playbook -v python-check.yml

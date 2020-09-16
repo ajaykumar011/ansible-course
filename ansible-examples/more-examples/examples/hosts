@@ -1,0 +1,6 @@
+[centos]
+centos1 
+#centos2    ansible_ssh_private_key_file=~/.ssh/Linode-us.rsa.pub
+
+[ubuntu]
+ubuntu1

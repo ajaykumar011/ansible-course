@@ -1,0 +1,18 @@
+https://serverfault.com/questions/918063/iterating-over-an-unknown-number-of-custom-ansible-facts/
+
+list-dict2.yml
+Ansible | Access multi dimensional variable for when conditional in nested loop task
+https://serverfault.com/questions/925452/ansible-access-multi-dimensional-variable-for-when-conditional-in-nested-loop/
+
+list-dict3.yml
+Yet another Ansible iteration
+https://stackoverflow.com/questions/51894009/yet-another-ansible-iteration/51915447#51915447
+
+list-dict[4-7].yml
+Ansible Loop Over Custom Facts
+https://serverfault.com/questions/927855/ansible-loop-over-custom-facts/
+
+list-dict9.yml
+https://stackoverflow.com/questions/52674767/ansible-loop-over-a-variable-with-a-number-of-times-it-must-be-re-executed
+
+--

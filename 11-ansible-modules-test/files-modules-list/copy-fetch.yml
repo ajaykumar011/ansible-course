@@ -1,0 +1,39 @@
+---
+  -
+    hosts: centos1
+    gather_facts: true
+      
+    tasks:
+      # Example that prints return information from the previous task
+      - name: Uptime check
+        shell: uptime
+        register: result
+
+      - debug:
+          msg: "{{ result.stdout_lines|list }}"
+          #verbosity: 2
+      
+      - name: Copy file with owner and permissions
+        copy:
+          src: ./demo.txt
+          dest: /tmp/demo.txt
+          owner: ajay  #user must be present
+          group: ajay  #group must be present
+          mode: '0664'
+      
+      - name: print a file
+        command: cat /tmp/demo.txt  #this is simple method
+        register: result
+      - debug:
+          #var: result  #for full list
+          msg: "{{ result.stdout_lines|list }}"
+      
+      - name: Fetching or downloading from remote to local
+        fetch:
+          src: /tmp/demo.txt
+          dest: /tmp/prefix-{{ inventory_hostname }}
+          flat: yes
+
+
+...
+#  To run use this command -  ansible-playbook -v python-check.yml

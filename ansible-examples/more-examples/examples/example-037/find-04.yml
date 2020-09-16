@@ -1,0 +1,32 @@
+- hosts: localhost
+  gather_facts: no
+  tasks:
+  - find:
+      paths: "/scratch/tmp/path/to/{{ item }}"
+      file_type: directory
+      recurse: yes
+    register: list
+    loop: [ aa, bb, cc, dd]
+#  - debug:
+#      var: list
+
+#  - set_fact:
+#      final: "{{ list.results|json_query('[].files[].path') }}"
+#  - debug:
+#      var: final
+
+  - set_fact:
+      pre_final: "{{ list.results|json_query('[].{path: files[].path,
+                                                  var: item}') }}"
+#  - debug:
+#      var: pre_final
+
+  - set_fact:
+      final: "{{ final|default([]) + [{'var': item.0.var,
+                                       'path': item.1}] }}"
+    loop: "{{ lookup('subelements', pre_final, 'path') }}"
+  - debug:
+      var: final
+
+# Ansible nested loop and jinja2 filter
+# https://stackoverflow.com/questions/56190974/ansible-nested-loop-and-jinja2-filter/

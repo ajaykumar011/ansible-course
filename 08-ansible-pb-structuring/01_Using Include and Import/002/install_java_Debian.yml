@@ -1,0 +1,5 @@
+---
+  - name: Installing Jab on Debian
+    apt:
+        name: openjdk-8-jdk
+        state: present

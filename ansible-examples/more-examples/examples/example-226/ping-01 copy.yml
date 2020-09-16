@@ -1,0 +1,34 @@
+- hosts: all
+  gather_facts: false
+  tasks:
+    - ping:
+      register: result
+    - debug:
+        msg: Host unreachable. Play failed.
+      when: result is failed
+    - meta: end_play
+      when: result is failed
+    - debug:
+        msg: All hosts reachable. Continue play.
+
+# ok: [test_02] => {
+#     "result": {
+#         "changed": false, 
+#         "failed": false, 
+#         "ping": "pong"
+#     }
+# }
+# ok: [test_01] => {
+#     "result": {
+#         "changed": false, 
+#         "failed": false, 
+#         "ping": "pong"
+#     }
+# }
+# ok: [test_03] => {
+#     "result": {
+#         "changed": false, 
+#         "failed": false, 
+#         "ping": "pong"
+#     }
+# }

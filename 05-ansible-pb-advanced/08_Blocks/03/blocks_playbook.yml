@@ -1,0 +1,41 @@
+---
+# YAML documents begin with the document separator ---
+
+# Blocks allow for logical grouping of tasks and in play error handling. Most of what you can apply to a single task (with the exception of loops) 
+# can be applied at the block level, which also makes it much easier to set data or directives common to the tasks. 
+-
+
+  # Target: where our play will run and options it will run with
+  hosts: linux
+
+  # Task: the list of tasks that will be executed within the play, this section
+  # can also be used for pre and post tasks
+  tasks:
+
+    - name: Install patch and python-dns
+      block:
+        - name: Install patch
+          package:
+            name: patch
+
+        - name: Install python-dnspython
+          package:
+            name: python-dnspython
+
+      rescue:
+        - name: Rollback patch
+          package:
+            name: patch
+            state: absent
+
+        - name: Rollback python-dnspython
+          package:
+            name: python-dnspython
+            state: absent
+
+      always:
+        - debug:
+            msg: This always runs, regardless
+
+# Three dots indicate the end of a YAML document
+...

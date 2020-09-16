@@ -1,0 +1,11 @@
+---
+  - name: Simple Play to install multiple pkgs
+    hosts: linux
+    gather_facts: true  #this must be true as we are fething ansible_os_family dynamic variable
+    become: yes
+    tasks:
+      #- import_tasks: install_webserver_{{ansible_os_family}}.yml #this wil give error as import_tasks does not support dynmaic variable
+      # we need to change the above task to include_taks as include_task support dynmaic variable
+      - include_tasks: install_webserver_{{ansible_os_family}}.yml
+      - include_tasks: install_java_{{ansible_os_family}}.yml
+      

@@ -1,0 +1,11 @@
+.DS_Store
+.vagrant/
+vagrant_ansible_inventory_default
+__pycache__
+*.cache
+*.retry
+test.sh
+
+*/roles/geerlingguy.*
+*/provisioning/roles/geerlingguy.*
+*/collections/ansible_collections/community/*

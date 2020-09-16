@@ -1,0 +1,10 @@
+---
+
+- name: "List hosts in the group"
+  hosts: centos1
+  gather_facts: no
+  tasks:
+    - debug: var=inventory_hostname
+
+# EOF
+...

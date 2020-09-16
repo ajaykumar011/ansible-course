@@ -1,0 +1,31 @@
+---
+# YAML documents begin with the document separator ---
+ 
+# Manage user accounts and user attributes. In this example we are creating users
+# create_home: yes (default), group:<string> (self is default), shell: <string>
+# state : present (this is default but in user delete we may need to declare this)
+# comment is usually user's full name
+-
+ 
+  # Target: where our play will run and options it will run with
+  hosts: linux
+ 
+  # Task: the list of tasks that will be executed within the playbook
+  tasks:
+    - name: Creating user
+      user:
+        name: "{{ item.key }}"
+        comment: "{{ item.value.full_name }}"
+        state: absent
+      with_dict: 
+        james: 
+          full_name: James Spurin
+        hayley: 
+          full_name: Hayley Spurin
+        lily: 
+          full_name: Lily Spurin
+        anwen:
+          full_name: Anwen Spurin
+ 
+# Three dots indicate the end of a YAML document
+...

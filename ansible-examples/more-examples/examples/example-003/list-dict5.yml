@@ -1,0 +1,9 @@
+- hosts: localhost
+  gather_facts: no
+  vars_files:
+    - vars5.yml
+  tasks:
+    - include_tasks: inner5.yml
+      loop: "{{ lookup('dict',ansible_local) }}"
+      loop_control:
+        loop_var: outer_item

@@ -1,0 +1,28 @@
+---
+# YAML documents begin with the document separator ---
+#add_host Module – Add a host (and alternatively a group) to the ansible-playbook in-memory inventory
+#It create new hosts and groups in inventory for use in later plays of the same playbook.
+#Takes variables so you can define the new hosts more fully.
+#in this example we are add_host name: centos1 to groups adhoc_group1 and group2
+#Also running task based on the new group. New group can be used in the same play.
+
+- hosts: ubuntu-c
+
+  # Task: the list of tasks that will be executed within the play, this section
+  # can also be used for pre and post tasks
+  tasks:
+    - name: Add centos1 to adhoc_group
+      add_host:
+        name: centos1
+        groups: adhoc_group1, adhoc_group2
+
+- hosts: adhoc_group1
+
+  # Task: the list of tasks that will be executed within the play, this section
+  # can also be used for pre and post tasks
+  tasks:
+    - name: Ping all in adhoc_group1
+      ping:
+
+# Three dots indicate the end of a YAML document
+...

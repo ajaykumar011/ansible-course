@@ -1,0 +1,35 @@
+---
+# YAML documents begin with the document separator ---
+
+#add_host Module – Add a host (and alternatively a group) to the ansible-playbook in-memory inventory
+#It create new hosts and groups in inventory for use in later plays of the same playbook.
+#Takes variables so you can define the new hosts more fully.
+#in this example we are using group_by instead of groups. group_by take key parameter and facts
+
+-
+
+  # Target: where our play will run and options it will run with
+  hosts: all
+
+  # Task: the list of tasks that will be executed within the play, this section
+  # can also be used for pre and post tasks
+  tasks:
+    - name: Create group based on ansible_distribution
+      group_by:
+        key: "custom_{{ ansible_distribution | lower }}"
+
+# The minus in YAML this indicates a list item.  The playbook contains a list
+# of plays, with each play being a dictionary
+-
+
+  # Target: where our play will run and options it will run with
+  hosts: custom_centos
+
+  # Task: the list of tasks that will be executed within the play, this section
+  # can also be used for pre and post tasks
+  tasks:
+    - name: Ping all in custom_centos
+      ping:
+
+# Three dots indicate the end of a YAML document
+...

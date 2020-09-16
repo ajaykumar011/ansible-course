@@ -1,0 +1,27 @@
+---
+- hosts: localhost
+  gather_facts: false
+  vars:
+    list_of_items: [ 'A', 'B', 'C' ]
+  tasks:
+    - template:
+        src: test3.j2
+        dest: /scratch/tmp/test
+    - template:
+        src: test3b.j2
+        dest: /scratch/tmp/test-b
+# Jinja2 - global variable update in for loop
+# https://stackoverflow.com/questions/57038830/jinja2-global-variable-update-in-for-loop
+
+# root:example-075# cat /scratch/tmp/test
+#     for i in {0..5500}; do command A --arg 1 commnand_stuff $i; done
+# #fi
+#     for i in {0..5500}; do command B --arg 1 commnand_stuff $i; done
+# #fi
+#     for i in {0..5500}; do command C --arg 1 commnand_stuff $i; done
+# #fi
+# root:example-075# cat /scratch/tmp/test-b
+
+#      1..5500
+#      5501..11000
+#      11001..16500

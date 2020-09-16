@@ -1,0 +1,35 @@
+---
+# YAML documents begin with the document separator ---
+
+#  set_fact module allows setting new variables.
+#  Variables are set on a host-by-host basis just like facts discovered by the setup module.
+#  These variables will be available to subsequent plays during an ansible-playbook run.
+#  In this example we are setting up two variables with when command.
+-
+
+  # Target: where our play will run and options it will run with
+  hosts: ubuntu3,centos3
+
+  # Task: the list of tasks that will be executed within the play, this section
+  # can also be used for pre and post tasks
+  tasks:
+    - name: Set our installation variables for CentOS
+      set_fact:
+        webserver_application_port: 80
+        webserver_application_path: /usr/share/www
+        webserver_application_user: root
+      when: ansible_distribution == 'CentOS'
+
+    - name: Set our installation variables for Ubuntu
+      set_fact:
+        webserver_application_port: 8080
+        webserver_application_path: /local/nginx
+        webserver_application_user: nginx
+      when: ansible_distribution == 'Ubuntu'
+
+    - name: Show pre-set distribution based facts
+      debug:
+        msg: "webserver_application_port:{{ webserver_application_port }} webserver_application_path:{{ webserver_application_path }} webserver_application_user:{{ webserver_application_user }}"
+
+# Three dots indicate the end of a YAML document
+...

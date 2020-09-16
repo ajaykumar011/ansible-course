@@ -1,0 +1,27 @@
+---
+# YAML documents begin with the document separator ---
+
+# This is no tested.. this is note tested.
+# Manage user accounts and user attributes. In this example we are creating users
+# create_home: yes (default), group:<string> (self is default), shell: <string>
+# state : present (this is default but in user delete we may need to declare this)
+# with_file is used to describe the public key with a user by using authorized_key module
+# authorized_key module – Adds or removes an SSH authorized key
+
+-
+ 
+  # Target: where our play will run and options it will run with
+  hosts: linux
+  user: root
+  vars:
+    # created with:
+    # python -c 'import crypt; print crypt.crypt("This is my Password", "redhat")'
+    # openssl passwd -salt -apr1 -1 <plaintext password>
+    password: re0prR/t7Qgj6
+  tasks:
+    - user: name=anil password={{password}}
+
+ 
+
+# Three dots indicate the end of a YAML document
+...

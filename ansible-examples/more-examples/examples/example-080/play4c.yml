@@ -1,0 +1,12 @@
+- hosts: host1
+  tasks:
+    - debug:
+        var: ansible_host
+    - debug:
+        var: inventory_hostname
+    - debug:
+        var: inventory_hostname_short
+    - command: whoami
+      register: result
+    - debug:
+        var: result.stdout

@@ -1,0 +1,2 @@
+remi_repo_url: "https://rpms.remirepo.net/enterprise/remi-release-7.rpm"
+remi_repo_gpg_key_url: "https://rpms.remirepo.net/RPM-GPG-KEY-remi2020"

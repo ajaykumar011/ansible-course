@@ -1,0 +1,138 @@
+- hosts: localhost
+  gather_facts: no
+
+  vars:
+    ritem:
+      - name: serviceName2
+        manifest: someManifest2
+        source: efgh.tgz
+        files:
+          - file3.tar
+          - file4.tar
+    rhash: "{{ ritem|map('dict_flatten')|map('hash')|list }}"
+
+  tasks:
+    - include_vars: reject4-data.yml
+    - debug:
+        var: rhash
+
+    - set_fact:
+        inst2: "{{ installers|selectattr('packages', 'defined')|list }}"
+    - debug:
+        var: inst2
+
+    - set_fact:
+        inst1: "{{ installers|difference(inst2) }}"
+    - debug:
+        var: inst1
+
+    - set_fact:
+        inst3: "{{ inst3|default([]) + [
+                   filter|
+                   list_select_list_bool(item.packages, negative=True)|
+                   list] }}"
+      vars:
+        filter: "{{ item.packages|
+                    map('dict_flatten')|
+                    map('hash')|
+                    map('bool_in', rhash)|
+                    list }}"
+      loop: "{{ inst2 }}"
+    - debug:
+        var: inst3
+
+    - set_fact:
+       inst4: "{{ inst4|default(inst1) + [
+                  item.0|combine({'packages': item.1})] }}"
+      loop: "{{ inst2|zip(inst3)|list }}"
+
+    - debug:
+        var: inst4
+
+# Ansible : delete an item from a dictionary
+# https://stackoverflow.com/questions/59901150/ansible-delete-an-item-from-a-dictionary
+
+# Formatting of the dictionaries
+# 
+# The simple solution does not work if the dictionaries are not
+# formatted (sorted) exactly the same way. For example, if the files'
+# order differs, the item won't be removed
+# 
+#   vars:
+#     ritem:
+#       - name: serviceName2
+#         manifest: someManifest2
+#         source: efgh.tgz
+#         files:
+#           - file4.tar
+#           - file3.tar
+#           
+# This can be fixed with a couple of custom filters. Let's create the
+# list rhash to simplify the comparison of the dictionaries and put it
+# to vars
+# 
+# rhash: "{{ ritem|map('dict_flatten')|map('hash')|list }}"
+# 
+# The tasks below give the same result
+# 
+#     - set_fact:
+#         inst3: "{{ inst3|default([]) + [
+#                    filter|
+#                    list_select_list_bool(item.packages, negative=True)|
+#                    list] }}"
+#       vars:
+#         filter: "{{ item.packages|
+#                     map('dict_flatten')|
+#                     map('hash')|
+#                     map('bool_in', rhash)|
+#                     list }}"
+#       loop: "{{ inst2 }}"
+#     - set_fact:
+#       inst4: "{{ inst4|default(inst1) + [
+#                  item.0|combine({'packages': item.1})] }}"
+#       loop: "{{ inst2|zip(inst3)|list }}"
+# 
+#     - debug:
+#         var: inst4
+# 
+# Custom filters
+# 
+# $ cat filter_plugins/filers.py
+# def bool_in(x, l):
+#     return (x in l)
+# 
+# def dict_flatten(d, separator='.'):
+#     out = {}
+#     def flatten(x, name=''):
+#         if type(x) is dict:
+#             for a in x:
+#                 flatten(x[a], name + a + separator)
+#         elif type(x) is list:
+#             i = 0
+#             for a in sorted(x):
+#                 flatten(a, name + str(i) + separator)
+#                 i += 1
+#         else:
+#             out[name[:-1]] = x
+#     flatten(d)
+#     return out
+# 
+# def list_select_list_bool(b, l, negative=False):
+#     l2=[]
+#     for bi,li in zip(b,l):
+#         if negative:
+#             if not bi:
+#                 l2.append(li)
+#         else:
+#             if bi:
+#                 l2.append(li)
+#     return l2
+# 
+# class FilterModule(object):
+# 
+#     def filters(self):
+#         return {
+#             'bool_in': bool_in,
+#             'dict_flatten': dict_flatten,
+#             'list_select_list_bool': list_select_list_bool
+#             }

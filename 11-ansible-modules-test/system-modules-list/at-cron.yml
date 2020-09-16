@@ -1,0 +1,36 @@
+---
+  -
+    hosts: ubuntu1
+    gather_facts: true
+      
+    tasks:
+      # Example that prints return information from the previous task
+      - name: Update apt-get repo and cache
+        apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+      - name: "Installing packages first method"
+        apt: 
+          name: ['rsync', 'git', 'wget', 'curl', 'gcc' ]
+          state: latest
+          autoclean: yes
+      - name: Install pkg second method
+        apt:
+          name:
+            - rsync
+            - git
+          state: latest
+
+      - name: Schedule a command to execute in 5 minutes making sure it is unique in the queue
+        at:  #works only with ubuntu
+          command: git --version > info.txt
+          count: 5
+          units: minutes  #minutes, hours, days, weeks
+          unique: yes
+      
+...
+#  To run use this command -  ansible-playbook -v python-check.yml
+
+#State as 'Present' and 'Installed' are used interchangeably. They both do the same thing i.e. it will ensure that a desired package in your case 'yum' is installed.
+#Whereas State as 'Latest' means in addition to installation, it will go ahead and update if it is not of the latest available version.
+#Whenever you are building your stack/app or working on production, it is always advisable to use 'Present' or 'Installed' state. This is because a software update, whether it’s your app’s deploy, or a dependency version bump, 
+#it has nothing to do with server configuration, and could really break your production.

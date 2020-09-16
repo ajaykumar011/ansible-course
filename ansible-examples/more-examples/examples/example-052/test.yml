@@ -1,0 +1,18 @@
+---
+- hosts: localhost
+  gather_facts: no
+  vars:
+    CHECKSLIST:
+      - check1
+#      - check2
+#      - check3  
+  tasks:
+  - name: Check All
+    include_tasks: "{{ item }}.yml"
+    with_items: "{{ CHECKSLIST }}"
+
+# EOF
+...
+
+# Get Ansible to print lines for include_role(s)
+# https://devops.stackexchange.com/questions/6899/get-ansible-to-print-lines-for-include-roles

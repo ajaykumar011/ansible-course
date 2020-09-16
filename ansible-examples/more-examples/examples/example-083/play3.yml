@@ -1,0 +1,26 @@
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - command: date
+      register: join_command
+    - debug: msg="{{ join_command.stdout_lines[0] }}" #first line of stdout to be copied to file join_command
+    - local_action: copy content="{{ join_command.stdout_lines[0] }}" dest="{{ playbook_dir }}/join-command"
+
+    - name: copy a file
+      local_action:  #local action to copy the above created file to /tmp
+        module: copy
+        src: "{{ playbook_dir }}/join-command"
+        dest: /tmp
+
+    - name: copy a file via delegate as alternative to local_action
+      delegate_to: localhost
+      copy:
+        src: "{{ playbook_dir }}/join-command"
+        dest: /scratch/tmp/
+# Ansible local_action example how does it work
+# https://stackoverflow.com/questions/56048959/ansible-local-action-example-how-does-it-work/
+
+# root:example-083# ls /tmp/join-command
+# /tmp/join-command
+# root:example-083# ls /scratch/tmp/join-command
+# /scratch/tmp/join-command

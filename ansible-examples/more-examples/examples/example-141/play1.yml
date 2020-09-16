@@ -1,0 +1,14 @@
+- name: play1
+  hosts: all
+  gather_facts: no
+  vars:
+    apps_list: [A, C]
+    complete_list: [A, B, C]
+  roles:
+    - role: role1
+    - role: role2
+    - role: role3
+      when: apps_list|length > 0
+
+# 1) app_list vs. app_var
+# 2) not quoted include: "deploy2.yml app={{ item }}"

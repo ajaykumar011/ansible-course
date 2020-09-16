@@ -1,0 +1,42 @@
+---
+  -
+   hosts: centos1
+   gather_facts: true
+
+   tasks:
+      - name: Compress directory /path/to/foo/ into /path/to/foo.tgz
+        archive:
+          path:  /var/log/lastlog
+          dest: /tmp/lastlog.tgz  
+      - name: Compress regular file /path/to/foo into /path/to/foo.gz and remove it
+        archive:
+          path: 
+            - /var/log/messages  #- /path/to/foo/*
+            - /var/log/nginx/*   # optional
+          dest: /tmp/generallog.zip
+          remove: no #remove the source
+          format: zip  #bz2 #gz
+          exclude_path:  #optional
+            - /var/log/yum.log
+          force_archive: true
+# Determine if a path exists and is a directory.  Note that we need to test
+# both that p.stat.isdir actually exists, and also that it's set to true.
+      - name: show the archive size
+        shell: du -sh /tmp/generallog.zip
+        register: result
+      - debug:
+          var: result
+      
+      - name: Extract sample.tgz into /tmp by copying tgz file local to remote
+        unarchive:
+          src: sample.tgz
+          dest: /tmp
+      
+      - name: Unarchive a file that is already on the remote machine
+        unarchive:
+          src: /tmp/generallog.zip
+          dest: /root
+          remote_src: yes #zip exists on server no copy from local
+
+...
+#  To run use this command -  ansible-playbook -v python-check.yml

@@ -1,0 +1,41 @@
+---
+# YAML documents begin with the document separator ---
+ 
+# This will create a new user with two public keys of localsystem and after this we will 
+# be able to login with the username and key
+-
+ 
+  # Target: where our play will run and options it will run with
+  hosts: linux
+ 
+  # Task: the list of tasks that will be executed within the playbook
+  tasks:
+    - name: Creating user
+      user:
+        name: "{{ item.key }}"
+        comment: "{{ item.value.full_name }}"
+      with_dict: # read contents from with_dict dictionary
+        james:  #item.key
+          full_name: James Spurin #item.value.full_name
+
+    - name: Create authorized key
+      authorized_key:
+        user: james
+        key: "{{ item }}" # read contents from with_file dictionary (below)
+      with_file:  #read contents from file
+        - /root/.ssh/id_rsa.pub
+        - custom_key.pub
+
+# Three dots indicate the end of a YAML document
+...
+
+
+#root:14# ssh centos1 -l root
+#[root@centos1 ~]# cat /home/james/.ssh/authorized_keys
+
+#you will find two keys one custom_key.pub in the current directory and other in the root directory
+#Now check the login 
+#root:14# ssh james@centos1
+#Welcome to CentOS Linux - Ansible Rocks
+#[james@centos1 ~]$ whoami
+#james

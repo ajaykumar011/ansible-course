@@ -1,0 +1,17 @@
+- hosts: localhost
+  become: yes
+  become_method: sudo
+  become_user: root
+  vars:
+    facts:
+      finance:
+        files:
+          - file1:
+              dest: "/tmp/dir1"
+              path: "/etc/finance/file1"
+          - file2:
+              dest: "/tmp/dir2"
+              path: "/etc/finance/file2"
+  tasks:
+    - include_tasks: list-dict1-task.yml
+      loop: "{{ facts.finance.files }}"

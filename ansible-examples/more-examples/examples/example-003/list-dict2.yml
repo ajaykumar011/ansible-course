@@ -1,0 +1,17 @@
+- hosts: localhost
+  vars:
+    result_CornerConfiguration:
+      results:
+        - stdout: "1"
+        - stdout: "2"
+        - stdout: "3"
+
+  tasks:
+    - debug:
+        msg: "{{ result_CornerConfiguration.results[0]['stdout'] }}"
+
+    - debug:
+        msg: "{{ item }}"
+      loop: "{{ result_CornerConfiguration | json_query('results[*][stdout]') }}"
+
+# EOF

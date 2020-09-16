@@ -1,0 +1,24 @@
+---
+# YAML documents begin with the document separator ---
+
+#assemble – Assemble configuration files from fragments
+#Assembles a configuration file from fragments.
+#Often a particular program will take a single configuration file and does not support a conf.d style structure where it is easy to build up 
+#the configuration from multiple sources. assemble will take a directory of files that can be local or have already been transferred to the system, and concatenate them together to produce a destination file.
+#Files are assembled in string sorting order. Here source is conf.d directory and output file isl sshd_config
+
+-
+
+  # Target: where our play will run and options it will run with
+  hosts: ubuntu-c
+
+  # Task: the list of tasks that will be executed within the play, this section
+  # can also be used for pre and post tasks
+  tasks:
+    - name: Assemble conf.d to sshd_config
+      assemble:
+        src: conf.d
+        dest: sshd_config
+
+# Three dots indicate the end of a YAML document
+...

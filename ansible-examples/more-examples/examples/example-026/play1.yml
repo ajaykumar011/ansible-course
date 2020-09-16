@@ -1,0 +1,38 @@
+- hosts: localhost
+  vars:
+    Mellanox_1: enp3s0
+    Mellanox_2: enp5s0
+    netplan_conf:
+      - file: "91-ethernet.yaml"
+        category: "ethernets"
+        conf: |
+          {{ Mellanox_1 }}:
+            dhcp4: no
+          {{ Mellanox_1 }}d1:
+            dhcp4: no
+          {{ Mellanox_2 }}:
+            dhcp4: no
+          {{ Mellanox_2 }}d1:
+            dhcp4: no
+      - file: "92-bonds.yaml"
+        category: "bonds"
+        conf: |
+          bond0:
+            interfaces:
+            - "{{ Mellanox_1 }}"
+            - "{{ Mellanox_1 }}d1"
+            - "{{ Mellanox_2 }}"
+            - "{{ Mellanox_2 }}d1"
+            parameters:
+              mode: 802.3ad
+  tasks:
+    - set_fact:
+        c1: "{{ netplan_conf.1.conf|from_yaml }}"
+    - debug:
+        var: c1
+    - set_fact:
+        c1_p2: "{{ (netplan_conf.1.conf|from_yaml).bond0.parameters }}"
+    - debug:
+        var: c1_p2
+    - debug:
+        var: c1.bond0.parameters

@@ -1,0 +1,14 @@
+- hosts: localhost
+  gather_facts: false
+  vars:
+    commands:
+      a: 'command1 keyword1 --param1'
+      b: 'command1 keyword2 --param2'
+      c: 'command1 keyword3 --param3'
+  tasks:
+    - debug:
+        msg: "{{ commands[item.attribute1] + ' ' + item.attribute1 }}"
+      loop:
+        - {attribute1: 'a'}
+        - {attribute1: 'b'}
+        - {attribute1: 'c'}

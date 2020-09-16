@@ -1,0 +1,71 @@
+---
+  -
+   hosts: centos1
+   gather_facts: true
+   
+  # [root@centos1 ~]# touch /etc/foo.conf
+  # [root@centos1 ~]# useradd foo
+
+   tasks:
+    - name: Change file ownership, group and permissions
+      # Example that prints return information from the previous task
+      file:
+        path: /etc/foo.conf
+        owner: foo
+        group: foo
+        mode: '0644'
+ 
+    - name: Touch a file, using symbolic modes to set the permissions (equivalent to 0644)
+      file:
+        path: /etc/foo2.conf
+        state: touch
+        mode: u=rw,g=r,o=r
+    
+    - name: Touch the same file, but add/remove some permissions
+      file:
+        path: /etc/foo3.conf
+        state: touch
+        mode: u+rw,g-wx,o-rwx
+    
+    - name: Touch again the same file, but dont change times this makes the task idempotent
+      file:
+        path: /etc/foo4.conf
+        state: touch
+        mode: u+rw,g-wx,o-rwx
+        modification_time: preserve
+        access_time: preserve
+    
+
+    - name: Update modification and access time of given file
+      file:
+        path: /etc/foo4.conf
+        state: file
+        modification_time: now
+        access_time: now
+
+    - name: Create a directory if it does not exist
+      file:
+        path: /etc/foo5
+        state: directory
+        mode: '0755'
+      
+    - name: Recursively change ownership of a directory
+      file:
+        path: /etc/foo5
+        state: directory
+        recurse: yes
+        owner: foo
+        group: foo
+    
+    - name: Remove file (delete file)
+      file:
+        path: /etc/foo.txt
+        state: absent
+    
+    - name: Recursively remove directory
+      file:
+        path: /etc/foo5
+        state: absent
+
+...
+#  To run use this command -  ansible-playbook -v python-check.yml

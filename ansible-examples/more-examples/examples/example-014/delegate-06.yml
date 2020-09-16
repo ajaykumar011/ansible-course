@@ -1,0 +1,16 @@
+- hosts: localhost
+  gather_facts: no
+  tasks:
+
+    - name: delegate include_tasks
+      include_tasks: task6.yml
+      delegate_to: test_01
+
+    - name: delegate import_tasks
+      import_tasks: task6.yml
+      delegate_to: test_01
+
+# https://docs.ansible.com/ansible/latest/user_guide/playbooks_delegation.html#delegation
+# 'include' is not delegated. Quoting from Delegation: "Be aware that it
+# does not make sense to delegate all tasks, debug, add_host, include,
+# etc always get executed on the controller."

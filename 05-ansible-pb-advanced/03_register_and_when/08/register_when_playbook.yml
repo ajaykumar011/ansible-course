@@ -1,0 +1,29 @@
+---
+# YAML documents begin with the document separator ---
+
+ # Ansible registers are used when you want to capture the output of a task to a variable. 
+ # You can then use the value of these registers for different scenarios like a conditional statement, logging etc.
+ # We are exporing the register and saved to variable called 'command_register' and later we show this from debug module
+
+
+-
+
+  # Target: where our play will run and options it will run with
+  hosts: linux
+
+  # Task: the list of tasks that will be executed within the play, this section
+  # can also be used for pre and post tasks
+  tasks:
+    - name: Exploring register
+      command: hostname -s
+      when: 
+        - ansible_distribution == "CentOS" 
+        - ansible_distribution_major_version | int >= 7
+      register: command_register
+
+    - name: Show register
+      debug:
+        var: command_register
+
+# Three dots indicate the end of a YAML document
+...

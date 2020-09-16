@@ -1,0 +1,28 @@
+---
+    -
+      hosts: centos1
+      gather_facts: true
+      
+      tasks:
+        - name: print a msg via /etc/motd
+          #command: cat /etc/motd  #this is simple method
+          command: cat {{ '/etc/motd'|quote }} #this is templated variable and avoid injection issues
+          register: result
+        - debug:
+            var: result
+
+
+     
+ 
+
+
+
+
+
+
+
+
+
+
+...
+#  To run use this command -  ansible-playbook -v python-check.yml

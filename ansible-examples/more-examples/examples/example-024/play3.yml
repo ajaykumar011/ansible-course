@@ -1,0 +1,5 @@
+- hosts: localhost
+  tasks:
+    - include_role:
+        name: my_role3
+        tasks_from: task2.yml

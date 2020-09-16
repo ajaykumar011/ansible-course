@@ -1,0 +1,34 @@
+---
+    # YAML documents begin with the document separator ---
+    
+    # The minus in YAML this indicates a list item.  The playbook contains a list 
+    # of plays, with each play being a dictionary
+    -
+      hosts: all
+      gather_facts: true
+      # Target: where our play will run and options it will run with
+    
+      # Variable: variables that will apply to the play, on all target systems
+    
+      # Task: the list of tasks that will be executed within the play, this section
+      # can also be used for pre and post tasks
+      tasks:
+        - name: Install python2 on Ubuntu
+          raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+          when: ansible_distribution == "Ubuntu"
+          
+        - name: Install python2 on Centos
+          raw: test -e /usr/bin/python || (yum -y update && yum install -y python-minimal)
+          when: ansible_distribution == "CentOS"
+        
+        - name: List  python version for all
+          command: python --version
+          # ansible centos3 -m setup | grep ansible_distribution (to get the distribution name)
+
+      # Handlers: handlers that are executed as a notify key from a task
+    
+      # Roles: list of roles to be imported into the play
+    
+    # Three dots indicate the end of a YAML document
+...
+#  To run use this command -  ansible-playbook -v python-check.yml

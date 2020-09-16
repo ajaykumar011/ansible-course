@@ -1,0 +1,14 @@
+---
+
+- hosts: all
+  gather_facts: no
+  tasks:
+    - group_by:
+        key: "cluster_{{ cluster_number }}"
+    - block:
+        - set_fact:
+            cluster_numbers: "{{ hostvars|json_query('*.cluster_number')|unique }}"
+        - debug:
+            var: groups['cluster_{{ item }}'][0]
+          loop:  "{{ cluster_numbers }}"
+      run_once: true

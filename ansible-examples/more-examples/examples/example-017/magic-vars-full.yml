@@ -1,0 +1,25 @@
+---
+
+- name: "Magic variables"
+  hosts: centos1
+  gather_facts: no
+  #With Ansible you can retrieve or discover certain variables containing information about your remote systems or about Ansible itself. ... 
+  #For example, you can use the IP address of one system as a configuration value on another system. 
+  #Variables related to Ansible are called magic variables.
+  vars:
+    msg: |
+      hostvars
+      {{ hostvars | to_yaml }}
+       
+  tasks:
+    - name: "Magic variables"
+      debug:
+        msg: "{{ msg.split('\n') }}"
+      tags: always
+
+    - debug:
+        msg: "{{ ansible_inventory_sources }}"
+      tags: always
+
+# EOF
+...

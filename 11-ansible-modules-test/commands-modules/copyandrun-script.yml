@@ -1,0 +1,53 @@
+---
+    - name: Transfer and execute a script.
+      hosts: centos2
+      gather_facts: true
+      remote_user: root
+
+      tasks:
+          - name: Transfer the script
+            copy: src=script.sh dest=/root/script.sh mode=0775
+     
+          - name: Execute the script
+            command: /root/script.sh
+
+#this is best method and use the script module
+          - name: Copy script to remote_machine
+            template: src=scriptj2.sh dest=/root/scriptj2 owner=root mode=0775
+          - name: Execute script on remote_machine
+            script: scriptj2.sh
+            
+      
+          - name: Run a script with arguments (free form)
+            script: linecounter.sh /etc/passwd
+
+            # - name: Template a file to /etc/files.conf
+            # template:
+            #   src: /mytemplates/foo.j2
+            #   dest: /etc/file.conf
+            #   owner: bin
+            #   group: wheel
+            #   mode: '0644'
+ 
+          - name: Run a script using an executable in a system path
+            script: hello.py
+            args:
+              executable: python2  #python3 also can be given
+
+            # The script module takes the script name followed by a list of space-delimited arguments.
+            # Either a free form command or cmd parameter is required, see the examples.
+            # The local script at path will be transferred to the remote node and then executed.
+            # The given script will be processed through the shell environment on the remote node.
+            # This module does not require python on the remote system, much like the raw module. 
+
+
+
+
+
+
+
+
+
+
+...
+#  To run use this command -  ansible-playbook -v python-check.yml

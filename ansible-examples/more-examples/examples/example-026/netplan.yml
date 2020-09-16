@@ -1,0 +1,35 @@
+- hosts: localhost
+  become: yes
+  become_method: sudo
+  become_user: root
+  vars:
+    Mellanox_1: enp3s0
+    Mellanox_2: enp5s0
+    lp_debug: true
+    lp_netplan_root: "/scratch/tmp"
+    lp_netplan: True
+    lp_netplan_conf:
+      - file: "91-ethernet.yaml"
+        category: "ethernets"
+        conf: |
+          {{ Mellanox_1 }}:
+            dhcp4: no
+          {{ Mellanox_1 }}d1:
+            dhcp4: no
+          {{ Mellanox_2 }}:
+            dhcp4: no
+          {{ Mellanox_2 }}d1:
+            dhcp4: no
+      - file: "92-bonds.yaml"
+        category: "bonds"
+        conf: |
+          bond0:
+            interfaces:
+            - "{{ Mellanox_1 }}"
+            - "{{ Mellanox_1 }}d1"
+            - "{{ Mellanox_2 }}"
+            - "{{ Mellanox_2 }}d1"
+            parameters:
+              mode: 802.3ad
+  roles:
+    - vbotka.linux_postinstall
