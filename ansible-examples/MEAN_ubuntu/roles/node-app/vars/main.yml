@@ -1,0 +1,9 @@
+---
+# vars file for mongo
+    homeDir: /home/ajay
+    appDir : node-app
+    # git hub information below
+    account: ajaykumar011
+    repo: ecs-node-docker
+    privateKey: /root/.ssh/id_rsa
+    project_path: /home/ajay

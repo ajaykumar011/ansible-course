@@ -1,0 +1,11 @@
+---
+  - hosts: ubuntu2
+    remote_user: ajay
+    become: yes
+
+    roles:
+      - mongo
+      - nodejs
+      - npm-pkg
+      - node-app
+      - ufw

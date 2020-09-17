@@ -1,0 +1,23 @@
+---
+# UFW Setup
+  - name: UFW - Allow Common Incoming Ports 
+    ufw: 
+      rule: allow
+      proto: tcp
+      port: "{{ item | string }}"
+    with_items:
+      - 22
+      - 80
+      - 443
+      - 3000
+    
+  - name: UFW - Deny all other incoming traffic by default
+    ufw:
+     state: enabled
+     policy: deny
+     direction: incoming
+     logging: 'on'
+    # to disabled   
+    # - name: Disable the firewall 
+    #   service: name=ufw state=stopped       
+    

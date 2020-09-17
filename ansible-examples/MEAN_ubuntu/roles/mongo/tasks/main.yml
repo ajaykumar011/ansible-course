@@ -1,0 +1,38 @@
+---
+# tasks file for mongo
+    - name: install prerequisite gnupg for add apt- optional
+      apt: name=gnupg update_cache=yes
+    
+    - stat: path=/etc/apt/sources.list.d/mongodb-org-4.4.list
+      register: p
+    - name: create the file 
+      file: path=/etc/apt/sources.list.d/mongodb-org-4.4.list owner=root group=root mode=0775
+            state={{ "file" if  p.stat.exists else "touch"}}
+
+    - name: Add an Apt signing key, uses whichever key is at the URL
+      apt_key:
+        url: https://www.mongodb.org/static/pgp/server-4.4.asc
+        state: present
+
+    - name: add to mongodb-org-4.4.list
+      lineinfile: dest=/etc/apt/sources.list.d/mongodb-org-4.4.list line="deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.4 multiverse"
+    
+    - name: Update and upgrade apt packages
+      become: true
+      apt:
+        upgrade: 'yes'
+        update_cache: yes
+        cache_valid_time: 86400 #One day
+        
+    - name: install mongo db
+      apt: 
+        name: mongodb-org 
+        update_cache: yes
+      notify:
+      - start mongodb
+ 
+    - name: Getting version of mongodb
+      command: mongod --version
+      register: result
+    - debug:
+        var: result.stdout_lines

@@ -1,0 +1,73 @@
+---
+    # tasks file for mongo
+        - name: Update apt-get repo and cache
+          apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+        
+        - name: "Installing packages first method"
+          apt: 
+            name: ['rsync', 'git', 'wget', 'curl', 'mcrypt', 'unzip' ]
+            state: latest
+            autoclean: yes
+
+        - name: Set some variable
+          set_fact:
+            release_path: "{{ project_path }}/releases/{{ lookup('pipe','date +%Y%m%d%H%M%S') }}"
+            current_path: "{{ project_path }}/current"
+        - name: Retrieve current release folder
+          command: readlink -f current
+          register: current_release_path
+          ignore_errors: yes
+          args:
+            chdir: "{{ project_path }}"
+        - name: Create new folder
+          file:
+            dest={{ release_path }}
+            mode=0755
+            recurse=yes
+            state=directory
+        
+        # - name: Clone the repository
+        #   git:
+        #     repo: git@github.com:USERNAME/REPO.git
+        #     dest: "{{ release_path }}"
+    
+        - name: Copy Private Key
+          copy: src={{privateKey}} dest={{homeDir}} mode=0600
+        
+        - name: Git Clone Repo
+          git: repo=git@github.com:{{account}}/{{repo}}.git dest={{ release_path }} update=yes force=yes accept_hostkey=yes key_file={{homeDir}}/id_rsa
+          #register: git_finished
+    
+        - name: Update npm
+          npm:
+            path={{ release_path }}
+        - name: Update symlink
+          file:
+            src={{ release_path }}
+            dest={{ current_path }}
+            state=link
+        - name: Delete old pm2 process
+          command: pm2 delete node-app
+          ignore_errors: yes
+        - name: Start pm2
+          command: pm2 start {{ current_path }}/server.js --name node-app -f
+        # - name: Delete old dir
+        #   shell: rm -rf {{ current_release_path.stdout }}/
+        #   when: current_release_path.stdout != current_path        
+        - name: Clean artifact path
+          file:
+            state: absent
+            path: "{{ current_release_path.stdout }}/"
+          when: current_release_path.stdout != current_path
+
+        - name: Pm2 status
+          command: pm2 status
+          register: result1
+        - name: Check that you can connect (GET) to a page and it returns a status 200
+          uri:
+            url: http://localhost:3000
+          register: result2
+        - debug:
+            var: result1
+        - debug:
+            var: result2

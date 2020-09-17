@@ -1,0 +1,36 @@
+---
+    # tasks file for mongo
+        - name: Update apt-get repo and cache
+          apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+        
+        - name: "Installing packages first method"
+          apt: 
+            name: ['rsync', 'git', 'wget', 'curl', 'mcrypt', 'unzip' ]
+            state: latest
+            autoclean: yes
+
+        - name: Create APP Directory
+          file: path={{homeDir}}/{{appDir}} state=directory
+      
+        - name: Copy Private Key
+          copy: src={{privateKey}} dest={{homeDir}} mode=0600
+      
+        - name: Git Clone Repo
+          git: repo=git@github.com:{{account}}/{{repo}}.git dest={{homeDir}}/{{appDir}} update=yes force=yes accept_hostkey=yes key_file={{homeDir}}/id_rsa
+          register: git_finished
+      
+        - name: Running NPM install
+          npm: path={{homeDir}}/{{appDir}}/backened
+          register: npm_finished
+          when: git_finished.changed
+      
+        # - name: Stop APP
+        #   #sudo_user: ajay
+        #   command: pm2 stop node-app chdir={{homeDir}}/{{appDir}}/backened
+        #   ignore_errors: yes
+      
+        - name: Start APP
+          #sudo_user: ajay
+          command: pm2 start server.js --name node-app chdir={{homeDir}}/{{appDir}}/backened
+          ignore_errors: yes
+          when: npm_finished.changed

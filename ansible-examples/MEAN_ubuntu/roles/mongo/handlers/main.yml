@@ -1,0 +1,4 @@
+---
+# handlers file for mongo
+    - name: start mongodb
+      service: name=mongod state=started
