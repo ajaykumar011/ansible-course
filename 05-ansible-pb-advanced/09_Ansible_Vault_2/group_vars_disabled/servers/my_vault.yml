@@ -1,0 +1,8 @@
+---
+my_vault:
+  'ubuntu1':
+    ansible_password: 'password1'
+  'ubuntu2':
+    ansible_password: 'password2'
+  'ubuntu3':
+    ansible_password: 'password3'

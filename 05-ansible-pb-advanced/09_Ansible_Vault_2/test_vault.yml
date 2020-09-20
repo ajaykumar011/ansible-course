@@ -1,0 +1,73 @@
+---
+  - hosts: ubuntu-c
+  # Getting Encrypted text variable from vars_file
+    vars_files:
+      - external_vault_vars.yml
+    tasks:
+      - name: Show first variable from external_vault_vars file
+        debug: var=demo_db_pass
+      - name: Show second varible from the same file
+        debug: 
+          var: demo_user_pass
+  
+# Using vault in playbooks
+# https://stackoverflow.com/questions/55048340/using-vault-in-playbooks/
+
+# Can't run enable in playbook
+# https://stackoverflow.com/questions/55055732/cant-run-enable-in-playbook
+
+# $ ansible-playbook site.yml --vault-password-file ~/.vault_pass.txt
+# or 
+# we can also export to environment variable, we are doing this for this example
+# first method with env variable
+# $ export ANSIBLE_VAULT_PASSWORD_FILE=/root/.vault_pass.txt
+# $ set | grep VAULT
+# ANSIBLE_VAULT_PASSWORD_FILE=/root/.vault_pass.txt
+# password set is now done - mysupersecret
+# 
+
+# Second method (with ansible.cfg)
+# $ cat ansible.cfg
+# [defaults]
+# inventory = hosts
+# host_key_checking = False
+# forks=6
+# vault_password_file = /root/.vault_pass.txt
+
+
+# # Now encrypt the vault file.
+# # $ cat external_vault_vars.yml
+# demo_db_pass: redhat
+# demo_user_pass: quickpass
+# add the vault_password_file line
+
+# $ ansible-vault encrypt external_vault_vars.yml
+# Encryption successful
+
+# $ ansible-vault view external_vault_vars.yml
+# demo_db_pass: redhat
+# demo_user_pass: quickpass
+# $
+
+# $ cat external_vault_vars.yml
+# $ANSIBLE_VAULT;1.1;AES256
+# 65376362336233323364626464346333663139336335626462313061313139323437656631626161
+# 3833633664383366326332313762636135643335386634330a613039626130643731663661336363
+# 65333333663339323737623037373062336432616331646235383539376164393865636630316464
+# 3331396165303866360a646535396236623263666539356338353565613638646136353031303436
+# 33643435323634353535323566383964623562643261313839376139626236333732336366313732
+# 3066663535343539656439663430306130323239343034616337
+
+# $ ansible-vault edit external_vault_vars.yml
+# demo_db_pass: redhat
+# demo_user_pass: quickpass
+
+
+# to run the playbook, it will not ask for any password
+# $ansible-playbook test_vault.yml
+
+# For example, to use a password store in the text file /path/to/my/vault-password-file:
+# $ansible-playbook --vault-password-file /root/.vault_pass.txt test_vault.yml
+# To prompt for a password:
+# $ansible-playbook --ask-vault-pass test_vault.yml
+  

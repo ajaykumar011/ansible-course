@@ -122,3 +122,18 @@
 
 # Three dots indicate the end of a YAML document
 ...
+
+# root:01# grep -A1 tags nginx_playbook.yml | grep ' -' | uniq
+#         - install-epel
+#         - install-nginx
+#         - patch-nginx
+#         - nginx-template
+#         - nginx-running
+#         - nginx-open-firewall
+# To run the playbook 
+#root:01# ansible-playbook nginx_playbook.yml --tags 'install-template,nginx-running,nginx-open-firewall'
+# How to skip tags
+#ansible-playbook nginx_playbook.yml --skip-tags 'patch-nginx'
+
+# How to skip tags event if always.
+# ansible-playbook nginx_playbook.yml --tags 'install-nginx' --skip-tags 'always'

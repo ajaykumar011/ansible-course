@@ -1,0 +1,17 @@
+---
+  - hosts: ubuntu-c
+  # Getting Encrypted text variable from vars_file
+    vars_files:
+      - external_plain_vars.yml
+    tasks:
+      - name: Show first variable from external_vault_vars file
+        debug: var=demo_db_pass
+      - name: Show second varible from the same file
+        debug: 
+          var: demo_user_pass
+  
+# Using vault in playbooks
+# https://stackoverflow.com/questions/55048340/using-vault-in-playbooks/
+
+# Can't run enable in playbook
+# https://stackoverflow.com/questions/55055732/cant-run-enable-in-playbook

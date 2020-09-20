@@ -122,3 +122,14 @@
 
 # Three dots indicate the end of a YAML document
 ...
+#Even if we are running only one tag but task with always tag will be executed 
+#ansible-playbook nginx_playbook.yml --tags 'install-nginx'
+
+#Executes all tasks that are tageed with 'tagged' options
+#ansible-playbook nginx_playbook.yml --tags 'tagged'
+
+#Executes all tasks that are not tageed
+#ansible-playbook nginx_playbook.yml --tags 'untagged'
+
+#By default all tags execute
+#ansible-playbook nginx_playbook.yml --tags 'all'

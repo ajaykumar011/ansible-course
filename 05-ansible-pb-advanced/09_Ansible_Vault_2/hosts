@@ -1,0 +1,17 @@
+[control]
+ubuntu-c
+
+[centos]
+centos[1:3]
+
+[ubuntu]
+ubuntu[1:3]
+
+[linux:children]
+centos
+ubuntu
+
+[servers]
+ubuntu1 ansible_user=ajay
+ubuntu2 ansible_user=root
+ubuntu3 ansible_user=ajay

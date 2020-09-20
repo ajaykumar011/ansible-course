@@ -120,3 +120,16 @@
 
 # Three dots indicate the end of a YAML document
 ...
+
+# How to find the list of taes in playbook 
+
+# root:01# grep -A1 tags nginx_playbook.yml | grep ' -' | uniq
+#         - install-epel
+#         - install-nginx
+#         - patch-nginx
+#         - nginx-template
+#         - nginx-running
+#         - nginx-open-firewall
+# root:01# ansible-playbook nginx_playbook.yml --tags 'install-epel'
+# multiple tags
+# root:01# ansible-playbook nginx_playbook.yml --tags 'install-nginx, patch-nginx'
