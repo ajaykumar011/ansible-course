@@ -1,0 +1,22 @@
+# http://www.inanzzz.com/index.php/post/6yc4/installing-composer-globally-with-ansible-and-vagrant
+---
+- name: Install required libs
+  yum:
+    state: latest
+    name:    
+      - php-cli
+      - php-zip
+      - wget
+      - unzip
+
+
+- name: Download the Composer installer script 
+  script: scripts/install.sh
+
+- name: Move to global
+  command: mv composer.phar /usr/local/bin/composer
+
+- name: Set permission
+  file:
+    path: /usr/local/bin/composer
+    mode: "a+x"

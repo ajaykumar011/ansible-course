@@ -1,0 +1,59 @@
+---
+# - name: Install Epel repository
+  # command: rpm -Uivh --replacepkgs {{epel_repository}}
+  
+- name: Install key
+  command: rpm --import http://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7
+
+- name: Install Remi repository
+  yum: name={{remi_repository}}
+
+- name: Install Epel Repository
+  yum: name=epel-release state=present
+  
+- name: Install Yum Utils
+  yum: name=yum-utils state=present
+
+- name: Change SELinux Policy Mode
+  command: setenforce 0
+  ignore_errors: True
+
+- name: Copy SELinux configuration file
+  copy: src=config dest=/etc/selinux/config owner=root group=root
+
+- name: Install wget
+  yum: name=wget state=present
+
+- name: Install gcc
+  yum: name=gcc state=present
+
+- name: Install Git
+  yum: name=git state=present
+
+- name: Install VIM
+  yum: name=vim state=present
+
+- name: Install Net tools
+  yum: name=net-tools state=present
+
+- name: Install Ntp
+  yum: name=ntp state=present
+  
+- name: Automatic load ntp when boot
+  command: systemctl enable ntpd
+
+- name: Install Supervisor
+  yum: name=supervisor state=present
+  
+- name: Automatic load supervisord when boot
+  command: systemctl enable supervisord
+
+- name: backup timezone
+  command: mv /etc/localtime /etc/localtime.backup
+
+- name: set timezone to HCMC
+  command: ln -s /usr/share/zoneinfo/Asia/Ho_Chi_Minh /etc/localtime
+
+- name: enable ntp sync
+  command: timedatectl set-ntp true
+  

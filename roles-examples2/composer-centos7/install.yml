@@ -1,0 +1,7 @@
+---
+- hosts: centos2
+  # remote_user: root
+  become: yes
+  roles:
+    # - common
+    - composer
