@@ -1,0 +1,67 @@
+<html>
+  <head>
+  <title>Host {{ inventory_hostname }}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  </head>
+  <body text="blue">
+    <h1>Welcome to the AWS EC2 Sample file</h1>
+    <h2>Host {{ inventory_hostname }}</h2>
+
+    <p>Welcome to {{ ansible_hostname }}.{{ ansible_distribution }} {{ ansible_distribution_version}} deployed on {{ ansible_architecture }} architecture </p>
+    <p/>
+    <?php
+      // Print out the current data and time
+      print "The Current Date and Time is: <br/>";
+      print date("g:i A l, F j Y.");
+    ?>
+    <p/>
+    
+<h2>Server IP Address Information</h2>	
+<a href=http://{{ ansible_default_ipv4.address }}/info.php>Link to Phpinfo</a>
+<p>This page was created on {{ ansible_date_time.date }}.</p>
+<ul>
+{% for address in ansible_all_ipv4_addresses %}
+<li>{{ address }}</li>
+{% endfor %}
+</ul>
+
+<?php
+//whether ip is from share internet
+if (!empty($_SERVER['HTTP_CLIENT_IP']))   
+  {
+    $ip_address = $_SERVER['HTTP_CLIENT_IP'];
+  }
+//whether ip is from proxy
+elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))  
+  {
+    $ip_address = $_SERVER['HTTP_X_FORWARDED_FOR'];
+  }
+//whether ip is from remote address
+else
+  {
+    $ip_address = $_SERVER['REMOTE_ADDR'];
+  }
+echo $ip_address;
+?>	
+
+<h2> System OS information </h2>
+<p/>
+<?php
+echo php_uname();
+echo PHP_OS;
+echo "<br>";
+exec('cat /etc/system-release', $out, $status);
+if (0 === $status) {
+    var_dump($out);
+} else {
+    echo "Command failed with status: $status";
+}	
+?>
+
+    <h2>PHP Information</h2>
+    <p/>
+    <?php
+      phpinfo();
+    ?>
+  </body>
+</html>

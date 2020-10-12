@@ -1,0 +1,14 @@
+---
+#System Settings
+php_modules: [ 'php-curl', 'php-gd', 'php-mbstring', 'php-xml', 'php-xmlrpc', 'php-soap', 'php-intl', 'php-zip' ]
+
+#MySQL Settings
+mysql_root_password: "mysupersecret"
+mysql_db: "wordpress"
+mysql_user: "sammy"
+mysql_password: "password"
+
+#HTTP Settings
+http_host: "cloudzone.today"
+http_conf: "cloudzone.today.conf"
+http_port: "80"

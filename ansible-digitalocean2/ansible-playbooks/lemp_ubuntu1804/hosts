@@ -1,0 +1,20 @@
+[control]
+ubuntu-c
+
+[centos]
+centos[1:3]
+
+[ubuntu]
+ubuntu[1:3]
+
+[linux:children]
+centos
+ubuntu
+##########################################################################
+# Makes sure we use Python 3 (/usr/bin/python3) on remote hosts.
+# [servers:vars] sets global values for all nodes in the "servers" group.
+# This is necessary because by default Ansible will try to use
+# /usr/bin/python, which is not available on newer Ubuntu versions.
+#########################################################################
+[ubuntu:vars]
+ansible_python_interpreter=/usr/bin/python3
